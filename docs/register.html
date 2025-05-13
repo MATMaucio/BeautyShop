@@ -18,7 +18,7 @@
   </form>
 
   <p>o</p>
-  <button id="google-register">Registrarse con Google</button>
+  <button id="google-register" class="google-btn">Registrarse con Google</button>
 
   <p id="mensaje"></p>
 
@@ -49,18 +49,6 @@
       }
 
       mensaje.textContent = "✅ Revisa tu correo para confirmar tu cuenta.";
-
-      // Inserta en tabla cliente
-      const userId = data?.user?.id;
-      if (userId) {
-        const { error: dbError } = await supabase
-          .from("cliente")
-          .insert([{ id: userId, nombre: name, correo: email }]);
-
-        if (dbError) {
-          console.error("❌ Error al guardar en cliente:", dbError.message);
-        }
-      }
     });
 
     document.getElementById("google-register").addEventListener("click", async () => {
@@ -70,4 +58,3 @@
 
 </body>
 </html>
-

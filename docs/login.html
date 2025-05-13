@@ -13,11 +13,11 @@
   <form id="login-form">
     <input type="email" id="email" placeholder="Correo electrónico" required />
     <input type="password" id="password" placeholder="Contraseña" required />
-    <button type="submit">Iniciar sesión</button>
+    <button type="submit">Entrar</button>
   </form>
 
   <p>o</p>
-  <button id="google-login">Iniciar sesión con Google</button>
+  <button id="google-login" class="google-btn">Entrar con Google</button>
 
   <p id="mensaje"></p>
 
@@ -33,20 +33,15 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         mensaje.textContent = "❌ " + error.message;
-        return;
+      } else {
+        mensaje.textContent = "✅ Sesión iniciada correctamente.";
+        // Redirigir a la página principal si deseas
+        // window.location.href = "index.html";
       }
-
-      mensaje.textContent = "✅ Bienvenido " + data.user.email;
-      setTimeout(() => {
-        window.location.href = "index.html"; // Redirigir al home
-      }, 1500);
     });
 
     document.getElementById("google-login").addEventListener("click", async () => {
