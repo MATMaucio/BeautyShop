@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar sesión</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <h2>Iniciar sesión</h2>
+
+  <form id="login-form">
+    <input type="email" id="email" placeholder="Correo electrónico" required />
+    <input type="password" id="password" placeholder="Contraseña" required />
+    <button type="submit">Iniciar sesión</button>
+  </form>
+
+  <p>o</p>
+  <button id="google-login">Iniciar sesión con Google</button>
+
+  <p id="mensaje"></p>
+
+  <script type="module">
+    import { supabase } from "./js/auth.js";
+
+    const form = document.getElementById("login-form");
+    const mensaje = document.getElementById("mensaje");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        mensaje.textContent = "❌ " + error.message;
+        return;
+      }
+
+      mensaje.textContent = "✅ Bienvenido " + data.user.email;
+      setTimeout(() => {
+        window.location.href = "index.html"; // Redirigir al home
+      }, 1500);
+    });
+
+    document.getElementById("google-login").addEventListener("click", async () => {
+      await supabase.auth.signInWithOAuth({ provider: "google" });
+    });
+  </script>
+
+</body>
+</html>

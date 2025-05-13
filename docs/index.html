@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inicio</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <h1>Bienvenido a nuestra tienda de belleza</h1>
+
+  <div id="user-info"></div>
+
+  <div id="auth-buttons">
+    <button id="login-button">Iniciar sesión</button>
+    <button id="register-button">Registrarse</button>
+  </div>
+
+  <p id="mensaje"></p>
+
+  <div id="productos-container"></div>
+
+  <script type="module">
+    import { supabase } from "./js/auth.js"; // Asegúrate de tener este archivo
+    import { cargarProductos } from "./js/productos.js"; // Función para cargar productos
+
+    const userInfo = document.getElementById("user-info");
+    const authButtons = document.getElementById("auth-buttons");
+    const mensaje = document.getElementById("mensaje");
+
+    // Mostrar UI según el estado de autenticación
+    async function renderUI() {
+      const { data } = await supabase.auth.getSession();
+
+      if (data.session) {
+        const email = data.session.user.email;
+        userInfo.innerHTML = `
+          <h3>Hola, ${email}</h3>
+          <button id="logout-button">Cerrar sesión</button>
+        `;
+        authButtons.style.display = "none";
+
+        // Evento de logout
+        document.getElementById("logout-button").addEventListener("click", async () => {
+          const { error } = await supabase.auth.signOut();
+          if (error) {
+            mensaje.textContent = "❌ " + error.message;
+          } else {
+            mensaje.textContent = "✅ Has cerrado sesión.";
+            setTimeout(() => window.location.reload(), 1500);
+          }
+        });
+      } else {
+        userInfo.innerHTML = "<h3>No has iniciado sesión.</h3>";
+        authButtons.style.display = "block";
+      }
+    }
+
+    renderUI();
+
+    // Navegación a las páginas de login y registro
+    document.getElementById("login-button").addEventListener("click", () => {
+      window.location.href = "login.html";
+    });
+
+    document.getElementById("register-button").addEventListener("click", () => {
+      window.location.href = "register.html";
+    });
+
+    // Cargar productos
+    cargarProductos();
+  </script>
+</body>
+</html>

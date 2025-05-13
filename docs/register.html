@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrarse</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <h2>Crear cuenta</h2>
+
+  <form id="register-form">
+    <input type="text" id="name" placeholder="Nombre completo" required />
+    <input type="email" id="email" placeholder="Correo electrónico" required />
+    <input type="password" id="password" placeholder="Contraseña" required />
+    <button type="submit">Registrarse</button>
+  </form>
+
+  <p>o</p>
+  <button id="google-register">Registrarse con Google</button>
+
+  <p id="mensaje"></p>
+
+  <script type="module">
+    import { supabase } from "./js/auth.js";
+
+    const form = document.getElementById("register-form");
+    const mensaje = document.getElementById("mensaje");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { name }
+        }
+      });
+
+      if (error) {
+        mensaje.textContent = "❌ " + error.message;
+        return;
+      }
+
+      mensaje.textContent = "✅ Revisa tu correo para confirmar tu cuenta.";
+
+      // Inserta en tabla cliente
+      const userId = data?.user?.id;
+      if (userId) {
+        const { error: dbError } = await supabase
+          .from("cliente")
+          .insert([{ id: userId, nombre: name, correo: email }]);
+
+        if (dbError) {
+          console.error("❌ Error al guardar en cliente:", dbError.message);
+        }
+      }
+    });
+
+    document.getElementById("google-register").addEventListener("click", async () => {
+      await supabase.auth.signInWithOAuth({ provider: "google" });
+    });
+  </script>
+
+</body>
+</html>
+
