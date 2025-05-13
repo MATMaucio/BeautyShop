@@ -7,68 +7,40 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-
-  <h1>Bienvenido a nuestra tienda de belleza</h1>
-
-  <div id="user-info"></div>
-
-  <div id="auth-buttons">
+  <header>
+    <h1>Bienvenido a la tienda de belleza</h1>
     <button id="login-button">Iniciar sesión</button>
-    <button id="register-button">Registrarse</button>
-  </div>
+    <button id="register-button">Crear cuenta</button>
+  </header>
 
-  <p id="mensaje"></p>
-
-  <div id="productos-container"></div>
+  <section id="productos-lista">
+    <!-- Los productos se llenarán dinámicamente aquí -->
+  </section>
 
   <script type="module">
-    import { supabase } from "./js/auth.js"; // Asegúrate de tener este archivo
-    import { cargarProductos } from "./js/productos.js"; // Función para cargar productos
+    import { getProductos } from './js/productos.js';
 
-    const userInfo = document.getElementById("user-info");
-    const authButtons = document.getElementById("auth-buttons");
-    const mensaje = document.getElementById("mensaje");
+    const productosLista = document.getElementById('productos-lista');
 
-    // Mostrar UI según el estado de autenticación
-    async function renderUI() {
-      const { data } = await supabase.auth.getSession();
-
-      if (data.session) {
-        const email = data.session.user.email;
-        userInfo.innerHTML = `
-          <h3>Hola, ${email}</h3>
-          <button id="logout-button">Cerrar sesión</button>
+    const cargarProductos = async () => {
+      const productos = await getProductos();
+      productos.forEach(producto => {
+        const productoElement = document.createElement('div');
+        productoElement.classList.add('producto');
+        productoElement.innerHTML = `
+          <h2>${producto.nombre}</h2>
+          <p>$${producto.precio}</p>
+          <button onclick="agregarAlCarrito(${producto.id})">Agregar al carrito</button>
         `;
-        authButtons.style.display = "none";
+        productosLista.appendChild(productoElement);
+      });
+    };
 
-        // Evento de logout
-        document.getElementById("logout-button").addEventListener("click", async () => {
-          const { error } = await supabase.auth.signOut();
-          if (error) {
-            mensaje.textContent = "❌ " + error.message;
-          } else {
-            mensaje.textContent = "✅ Has cerrado sesión.";
-            setTimeout(() => window.location.reload(), 1500);
-          }
-        });
-      } else {
-        userInfo.innerHTML = "<h3>No has iniciado sesión.</h3>";
-        authButtons.style.display = "block";
-      }
-    }
+    const agregarAlCarrito = (id) => {
+      console.log(`Producto ${id} agregado al carrito.`);
+      // Lógica para agregar al carrito
+    };
 
-    renderUI();
-
-    // Navegación a las páginas de login y registro
-    document.getElementById("login-button").addEventListener("click", () => {
-      window.location.href = "login.html";
-    });
-
-    document.getElementById("register-button").addEventListener("click", () => {
-      window.location.href = "register.html";
-    });
-
-    // Cargar productos
     cargarProductos();
   </script>
 </body>

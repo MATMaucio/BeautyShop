@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carrito</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Tu carrito</h1>
+  </header>
+
+  <section id="cart-container">
+    <!-- Los artículos del carrito se mostrarán aquí -->
+  </section>
+
+  <button id="checkout-button">Ir a la compra</button>
+
+  <script type="module">
+    import { displayCart } from './js/ui.js';
+    displayCart();
+  </script>
+</body>
+</html>

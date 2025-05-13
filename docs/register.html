@@ -18,43 +18,10 @@
   </form>
 
   <p>o</p>
-  <button id="google-register" class="google-btn">Registrarse con Google</button>
+  <button id="google-register">Registrarse con Google</button>
 
   <p id="mensaje"></p>
 
-  <script type="module">
-    import { supabase } from "./js/auth.js";
-
-    const form = document.getElementById("register-form");
-    const mensaje = document.getElementById("mensaje");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { name }
-        }
-      });
-
-      if (error) {
-        mensaje.textContent = "❌ " + error.message;
-        return;
-      }
-
-      mensaje.textContent = "✅ Revisa tu correo para confirmar tu cuenta.";
-    });
-
-    document.getElementById("google-register").addEventListener("click", async () => {
-      await supabase.auth.signInWithOAuth({ provider: "google" });
-    });
-  </script>
-
+  <script type="module" src="js/register.js"></script>
 </body>
 </html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Confirmación de Pedido</h1>
+  </header>
+
+  <section id="checkout-details">
+    <!-- Detalles del carrito y método de pago -->
+    <h2>Resumen de tu compra</h2>
+    <div id="checkout-cart-details">
+      <!-- Detalles del carrito de compras se llenarán aquí -->
+    </div>
+    <h3>Método de pago</h3>
+    <form id="payment-form">
+      <label for="card-number">Número de tarjeta:</label>
+      <input type="text" id="card-number" required />
+
+      <label for="card-expiry">Fecha de vencimiento:</label>
+      <input type="text" id="card-expiry" required />
+
+      <label for="card-cvc">CVC:</label>
+      <input type="text" id="card-cvc" required />
+
+      <button type="submit">Pagar</button>
+    </form>
+  </section>
+
+  <script type="module">
+    import { getCart } from './js/carrito.js';
+
+    const checkoutCartDetails = document.getElementById('checkout-cart-details');
+
+    const mostrarDetallesCarrito = () => {
+      const cart = getCart();
+      if (cart.length === 0) {
+        checkoutCartDetails.innerHTML = "<p>No hay productos en tu carrito.</p>";
+        return;
+      }
+
+      let total = 0;
+      cart.forEach(item => {
+        total += item.precio;
+        checkoutCartDetails.innerHTML += `
+          <p>${item.nombre} - $${item.precio}</p>
+        `;
+      });
+
+      checkoutCartDetails.innerHTML += `<h3>Total: $${total}</h3>`;
+    };
+
+    mostrarDetallesCarrito();
+
+    document.getElementById('payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Aquí iría la integración con un sistema de pagos real (ej: Stripe, PayPal)
+      alert("Pago realizado con éxito (esto es solo un ejemplo).");
+      localStorage.removeItem('cart');  // Limpiar carrito después de la compra
+      window.location.href = 'index.html';  // Redirigir al inicio
+    });
+  </script>
+</body>
+</html>

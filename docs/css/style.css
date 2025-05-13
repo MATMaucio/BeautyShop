@@ -1,40 +1,51 @@
 body {
-  font-family: sans-serif;
-  background: #fdf2f8;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  padding: 20px;
+}
+
+header {
   text-align: center;
-  padding: 2rem;
+  margin-bottom: 30px;
 }
 
-form {
-  display: inline-block;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
-}
-
-input,
-button {
-  margin: 0.5rem;
-  padding: 0.5rem;
-  width: 100%;
-  max-width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+h1 {
+  color: #c71585;
 }
 
 button {
+  padding: 10px 20px;
   background-color: #c71585;
   color: white;
-  cursor: pointer;
   border: none;
+  cursor: pointer;
 }
 
 button:hover {
   background-color: #a0136d;
 }
 
-.google-btn {
-  background-color: #4285f4;
-  color: white;
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cart-item h4 {
+  margin: 0;
+}
+
+.cart-item button {
+  background-color: #e53e3e;
+}
+
+.cart-item button:hover {
+  background-color: #c53030;
+}
+
+#cart-container {
+  max-width: 600px;
+  margin: 0 auto;
 }
