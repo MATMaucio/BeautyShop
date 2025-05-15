@@ -2,46 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Inicio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tienda Online - Inicio</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header>
-    <h1>Bienvenido a la tienda de belleza</h1>
-    <button id="login-button">Iniciar sesión</button>
-    <button id="register-button">Crear cuenta</button>
+    <h1>Tienda Online</h1>
+    <div id="user-info"></div>
+    <button id="logout-btn">Cerrar sesión</button>
   </header>
 
-  <section id="productos-lista">
-    <!-- Los productos se llenarán dinámicamente aquí -->
-  </section>
+  <main>
+    <section id="product-list">
+      <!-- Productos cargados dinámicamente -->
+    </section>
+  </main>
 
-  <script type="module">
-    import { getProductos } from './js/productos.js';
+  <footer>
+    <p>&copy; 2025 Tienda Online</p>
+  </footer>
 
-    const productosLista = document.getElementById('productos-lista');
-
-    const cargarProductos = async () => {
-      const productos = await getProductos();
-      productos.forEach(producto => {
-        const productoElement = document.createElement('div');
-        productoElement.classList.add('producto');
-        productoElement.innerHTML = `
-          <h2>${producto.nombre}</h2>
-          <p>$${producto.precio}</p>
-          <button onclick="agregarAlCarrito(${producto.id})">Agregar al carrito</button>
-        `;
-        productosLista.appendChild(productoElement);
-      });
-    };
-
-    const agregarAlCarrito = (id) => {
-      console.log(`Producto ${id} agregado al carrito.`);
-      // Lógica para agregar al carrito
-    };
-
-    cargarProductos();
-  </script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/productos.js"></script>
 </body>
 </html>
+
+

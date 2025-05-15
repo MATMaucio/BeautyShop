@@ -2,22 +2,28 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Iniciar sesión</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iniciar Sesión</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-
-  <h2>Iniciar sesión</h2>
+  <h1>Iniciar Sesión</h1>
 
   <form id="login-form">
     <input type="email" id="email" placeholder="Correo electrónico" required />
     <input type="password" id="password" placeholder="Contraseña" required />
-    <button type="submit">Iniciar sesión</button>
+    <button type="submit">Ingresar</button>
   </form>
 
-  <p id="mensaje"></p>
+  <button id="google-login" class="google-btn">Ingresar con Google</button>
 
-  <script type="module" src="js/login.js"></script>
+  <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+
+  <script type="module" src="js/auth.js"></script>
 </body>
 </html>
+
+
+
+
+

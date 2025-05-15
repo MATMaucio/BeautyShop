@@ -1,46 +1,118 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { supabase } from './supabaseclient.js';
 
-// Configuración de Supabase
-const SUPABASE_URL = "https://ksppnkopnkpmlcethoma.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzcHBua29wbmtwbWxjZXRob21hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxNzU1NzAsImV4cCI6MjA2Mjc1MTU3MH0.GpfcrsPoz1c0wZV4Zahk_yD0OOQ86PN7494v8vlBIHE";  // Reemplaza esto por tu clave anónima
+const path = window.location.pathname;
+const isLoginPage = path.includes('login.html');
+const isRegisterPage = path.includes('register.html');
+const isIndexPage = path.includes('index.html');
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+if (isLoginPage) {
+  const form = document.getElementById("login-form");
+  const googleBtn = document.getElementById("google-login");
 
-export const signUp = async (email, password, name) => {
-  const { user, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { name }
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      alert(error.message);
+      return;
     }
+
+    window.location.href = "index.html";
   });
-  if (error) {
-    throw error;
-  }
-  return user;
-};
 
-export const signIn = async (email, password) => {
-  const { user, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
+  googleBtn.addEventListener("click", async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${location.origin}/index.html`
+      }
+    });
+
+    if (error) alert(error.message);
   });
-  if (error) {
-    throw error;
-  }
-  return user;
-};
+}
 
-export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    throw error;
-  }
-};
+if (isRegisterPage) {
+  const form = document.getElementById("register-form");
+  const googleBtn = document.getElementById("google-register");
 
-export const getUser = async () => {
-  const user = supabase.auth.user();
-  return user;
-};
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-export default supabase;
+    const nombre = document.getElementById("nombre").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { nombre }
+      }
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    // Guardar datos extra en tabla cliente
+    const { error: insertError } = await supabase
+      .from("cliente")
+      .insert({ id: data.user.id, nombre, correo: email });
+
+    if (insertError) {
+      alert("Error al guardar el cliente: " + insertError.message);
+      return;
+    }
+
+    alert("¡Cuenta creada! Revisa tu correo para confirmar.");
+
+    window.location.href = "login.html";
+  });
+
+  googleBtn.addEventListener("click", async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${location.origin}/index.html`
+      }
+    });
+
+    if (error) alert(error.message);
+  });
+}
+
+if (isIndexPage) {
+  (async () => {
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        window.location.href = "login.html";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+  })();
+}
+
+

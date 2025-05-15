@@ -1,17 +1,32 @@
-import { supabase } from './auth.js';
+// js/productos.js
+import { supabase } from './supabaseclient.js';
 
-export const getProductos = async () => {
-  const { data, error } = await supabase.from('productos').select('*');
-  if (error) {
-    console.error('Error obteniendo productos:', error);
-  }
-  return data;
-};
+const productosContainer = document.getElementById("product-list"); // Asegúrate que el ID coincide en tu HTML
 
-export const getProductoById = async (id) => {
-  const { data, error } = await supabase.from('productos').select('*').eq('id', id).single();
+async function cargarProductos() {
+  const { data: productos, error } = await supabase.from("producto").select("*");
+
   if (error) {
-    console.error('Error obteniendo el producto:', error);
+    productosContainer.innerHTML = `<p class="error">Error al cargar productos: ${error.message}</p>`;
+    return;
   }
-  return data;
-};
+
+  if (!productos || productos.length === 0) {
+    productosContainer.innerHTML = `<p>No hay productos disponibles.</p>`;
+    return;
+  }
+
+  productosContainer.innerHTML = productos.map(producto => `
+    <article class="product-card">
+      <h3>${producto.nombre}</h3>
+      <p>${producto.descripcion}</p>
+      <p><strong>Marca:</strong> ${producto.marca}</p>
+      <p><strong>Categoría:</strong> ${producto.categoria}</p>
+      <p><strong>Precio:</strong> $${producto.precio.toFixed(2)}</p>
+      <p><strong>Stock:</strong> ${producto.stock}</p>
+    </article>
+  `).join("");
+}
+
+cargarProductos();
+
