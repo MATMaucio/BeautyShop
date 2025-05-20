@@ -4,7 +4,11 @@ const path = window.location.pathname;
 const isLoginPage = path.includes('login.html');
 const isRegisterPage = path.includes('register.html');
 const isIndexPage = path.includes('index.html');
+const isProductosPage = path.includes('productos.html');
+const isCheckoutPage = path.includes('checkout.html');   // ✅ NUEVO
+const isCarritoPage = path.includes('carrito.html');     // ✅ NUEVO
 
+// 🟢 LOGIN
 if (isLoginPage) {
   const form = document.getElementById("login-form");
   const googleBtn = document.getElementById("google-login");
@@ -37,6 +41,7 @@ if (isLoginPage) {
   });
 }
 
+// 🔵 REGISTRO
 if (isRegisterPage) {
   const form = document.getElementById("register-form");
   const googleBtn = document.getElementById("google-register");
@@ -61,7 +66,6 @@ if (isRegisterPage) {
       return;
     }
 
-    // Guardar datos extra en tabla cliente
     const { error: insertError } = await supabase
       .from("cliente")
       .insert({ id: data.user.id, nombre, correo: email });
@@ -72,7 +76,6 @@ if (isRegisterPage) {
     }
 
     alert("¡Cuenta creada! Revisa tu correo para confirmar.");
-
     window.location.href = "login.html";
   });
 
@@ -88,7 +91,8 @@ if (isRegisterPage) {
   });
 }
 
-if (isIndexPage) {
+// 🟡 PRODUCTOS (página privada)
+if (isProductosPage) {
   (async () => {
     const logoutBtn = document.getElementById("logout-btn");
     const userInfo = document.getElementById("user-info");
@@ -115,4 +119,82 @@ if (isIndexPage) {
   })();
 }
 
+// 🟢 INDEX (público con sesión opcional)
+if (isIndexPage) {
+  (async () => {
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+      userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+      logoutBtn.style.display = "inline-block";
+
+      logoutBtn.addEventListener("click", async () => {
+        await supabase.auth.signOut();
+        window.location.href = "index.html";
+      });
+    } else {
+      userInfo.textContent = "No has iniciado sesión";
+      logoutBtn.style.display = "none";
+    }
+  })();
+}
+
+// 🟣 CHECKOUT (página privada protegida)
+if (isCheckoutPage) {
+  (async () => {
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        window.location.href = "login.html";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+  })();
+}
+
+// 🟠 CARRITO (página privada protegida)
+if (isCarritoPage) {
+  (async () => {
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        window.location.href = "login.html";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+  })();
+}
 

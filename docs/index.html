@@ -10,22 +10,21 @@
   <header>
     <h1>Tienda Online</h1>
     <div id="user-info"></div>
-    <button id="logout-btn">Cerrar sesión</button>
+    <button id="logout-btn" style="display: none;">Cerrar sesión</button>
   </header>
 
   <main>
-    <section id="product-list">
-      <!-- Productos cargados dinámicamente -->
+    <section class="bienvenida">
+      <h2>¡Bienvenido a tu tienda online!</h2>
+      <p>Explora nuestros productos seleccionando el botón de abajo.</p>
+      <a href="productos.html" class="btn-catalogo">Ver catálogo de productos</a>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Tienda Online</p>
+    <p>&copy; 2025 Tienda Online - Todos los derechos reservados</p>
   </footer>
 
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/productos.js"></script>
 </body>
 </html>
-
-

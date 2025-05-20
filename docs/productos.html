@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo de Productos</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Tienda Online</h1>
+    <div id="user-info"></div>
+    <button id="logout-btn">Cerrar sesión</button>
+    <a href="carrito.html" class="btn-carrito">🛒 Carrito (<span id="carrito-count">0</span>)</a>
+  </header>
+
+  <main>
+    <section id="product-list">
+      <!-- Los productos se cargarán dinámicamente aquí -->
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Tienda Online - Todos los derechos reservados</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/productos.js"></script>
+</body>
+</html>
+
+

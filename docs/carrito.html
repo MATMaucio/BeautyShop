@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carrito de Compras</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Carrito de Compras</h1>
+    <div id="user-info"></div>
+    <button id="logout-btn">Cerrar sesión</button>
+  </header>
+
+  <main>
+    <section id="carrito-container">
+      <h2>Tu carrito</h2>
+      <div id="carrito-items"></div>
+      <p id="carrito-total">Total: $0.00</p>
+
+      <!-- ✅ Botón para ir a checkout -->
+      <button id="checkout-btn" style="margin-top: 20px;">Finalizar compra</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Tienda Online - Todos los derechos reservados</p>
+  </footer>
+
+  <script type="module" src="js/carrito.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script>
+    // Redirigir al usuario al checkout
+    document.getElementById("checkout-btn").addEventListener("click", () => {
+      window.location.href = "checkout.html";
+    });
+  </script>
+</body>
+</html>
+
