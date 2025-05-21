@@ -8,6 +8,30 @@ body {
   color: #333;
 }
 
+input,
+button {
+  margin: 0.5rem 0;
+  padding: 0.7rem;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #c71585;
+  color: white;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #a0136d;
+}
+
 /* ====== Encabezado ====== */
 header {
   background-color: #c71585;
@@ -53,30 +77,6 @@ form {
   border-radius: 10px;
   box-shadow: 0 0 10px #ccc;
   text-align: center;
-}
-
-input,
-button {
-  margin: 0.5rem 0;
-  padding: 0.7rem;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
-
-button {
-  background-color: #c71585;
-  color: white;
-  cursor: pointer;
-  border: none;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #a0136d;
 }
 
 .google-btn {
@@ -176,7 +176,6 @@ a:hover {
   font-size: 0.95rem;
 }
 
-/* 🛒 Botón Agregar al Carrito */
 .agregar-carrito {
   margin-top: 0.8rem;
   padding: 0.6rem;
@@ -219,3 +218,168 @@ footer {
   top: -10px;
   right: -15px;
 }
+
+/* ====== Perfil de Usuario (perfil.html) ====== */
+main h1 {
+  color: #c71585;
+  margin-bottom: 1rem;
+}
+
+#perfil-form label {
+  display: block;
+  text-align: left;
+  margin: 0.5rem 0;
+  font-weight: bold;
+  color: #555;
+}
+
+#perfil-form input {
+  margin-top: 0.2rem;
+}
+
+/* ====== Carrito de Compras (carrito.html) ====== */
+#carrito-items {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+  text-align: left;
+}
+
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding: 0.8rem 0;
+}
+
+.carrito-item h4 {
+  margin: 0;
+  color: #c71585;
+}
+
+.carrito-item span {
+  font-weight: bold;
+}
+
+#total-carrito {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  text-align: right;
+}
+
+#checkout-btn {
+  display: block;
+  margin: 2rem auto 0;
+  background-color: #c71585;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#checkout-btn:hover {
+  background-color: #a0136d;
+}
+
+/* ====== Checkout (checkout.html) ====== */
+#checkout-form {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+#checkout-form label {
+  display: block;
+  text-align: left;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #555;
+}
+
+#checkout-form input {
+  margin-top: 0.3rem;
+}
+
+#realizar-pedido {
+  margin-top: 1.5rem;
+  background-color: #c71585;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  padding: 0.7rem;
+  width: 100%;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+#realizar-pedido:hover {
+  background-color: #a0136d;
+}
+
+/* ====== Historial de Pedidos (perfil.html o historial.html) ====== */
+#historial-pedidos {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+.pedido {
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+  text-align: left;
+}
+
+.pedido h3 {
+  margin: 0;
+  color: #c71585;
+}
+
+.pedido p {
+  margin: 0.3rem 0;
+}
+
+.detalle-pedido {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.detalle-pedido ul {
+  padding-left: 1.2rem;
+  margin: 0.5rem 0;
+  list-style-type: disc;
+}
+
+#perfil-btn {
+  background-color: white;
+  color: #c71585;
+  border: 2px solid white;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+#perfil-btn:hover {
+  background-color: #fff0f5;
+}
+
+

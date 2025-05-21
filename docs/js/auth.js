@@ -5,8 +5,10 @@ const isLoginPage = path.includes('login.html');
 const isRegisterPage = path.includes('register.html');
 const isIndexPage = path.includes('index.html');
 const isProductosPage = path.includes('productos.html');
-const isCheckoutPage = path.includes('checkout.html');   // ✅ NUEVO
-const isCarritoPage = path.includes('carrito.html');     // ✅ NUEVO
+const isCheckoutPage = path.includes('checkout.html');
+const isCarritoPage = path.includes('carrito.html');
+const isHistorialPage = path.includes('historial.html'); // 🆕
+const isPerfilPage = path.includes('perfil.html'); // 🆕
 
 // 🟢 LOGIN
 if (isLoginPage) {
@@ -197,4 +199,62 @@ if (isCarritoPage) {
     });
   })();
 }
+
+// 🔴 HISTORIAL (página privada protegida)
+if (isHistorialPage) {
+  (async () => {
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        window.location.href = "login.html";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+  })();
+}
+
+// 🟤 PERFIL (página privada protegida)
+if (isPerfilPage) {
+  (async () => {
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        window.location.href = "login.html";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+  })();
+}
+
+
 

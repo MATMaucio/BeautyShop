@@ -5,6 +5,9 @@ const carritoItems = document.getElementById("checkout-items");
 const totalElement = document.getElementById("checkout-total");
 const finalizarBtn = document.getElementById("finalizar-compra");
 
+// 🔁 URL de tu Stripe Payment Link
+const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/test_28E28qcejfCDcBMd2l7Vm01"; // Reemplaza con tu enlace real
+
 // Obtener carrito
 function obtenerCarrito() {
   return JSON.parse(localStorage.getItem("carrito")) || [];
@@ -126,11 +129,24 @@ finalizarBtn.addEventListener("click", async () => {
     }
   }
 
-  // Limpiar carrito
+  // Registrar método de pago
+  const { error: metodoPagoError } = await supabase
+    .from("metodo_pago")
+    .insert([{
+      id_pedido: pedido.id,
+      tipo: "stripe_payment_link"
+    }]);
+
+  if (metodoPagoError) {
+    alert("Error al registrar método de pago.");
+    return;
+  }
+
+  // Limpiar carrito y redirigir a Stripe
   localStorage.removeItem("carrito");
-  alert("¡Compra realizada con éxito!");
-  window.location.href = "productos.html";
+  window.location.href = STRIPE_PAYMENT_LINK;
 });
 
 // Inicializar
 mostrarResumen();
+

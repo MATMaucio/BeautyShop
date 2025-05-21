@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mi Perfil</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <span id="user-info"></span>
+    <button id="logout-btn">Cerrar sesión</button>
+  </header>
+
+  <main>
+    <h1>Mi perfil</h1>
+    <form id="perfil-form">
+      <label>Nombre:
+        <input type="text" id="nombre" required />
+      </label><br />
+      <label>Correo:
+        <input type="email" id="correo" readonly />
+      </label><br />
+      <label>Dirección:
+        <input type="text" id="direccion" />
+      </label><br />
+      <label>Teléfono:
+        <input type="tel" id="telefono" />
+      </label><br />
+      <button type="submit">Guardar cambios</button>
+    </form>
+
+    <hr />
+
+    <button id="btn-historial">Ver historial de pedidos</button>
+  </main>
+<script type="module" src="js/auth.js"></script>
+<script type="module" src="js/perfil.js"></script>
+</body>
+</html>
+
