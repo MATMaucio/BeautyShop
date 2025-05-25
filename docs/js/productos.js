@@ -26,7 +26,7 @@ function actualizarContadorCarrito() {
 async function cargarProductos() {
   const { data: productos, error } = await supabase
     .from("producto")
-    .select("id, nombre, precio, stock");
+    .select("id, nombre, precio, stock, imagen_url");
 
   if (error) {
     productList.innerHTML = `<p>Error al cargar productos: ${error.message}</p>`;
@@ -38,23 +38,24 @@ async function cargarProductos() {
     return;
   }
 
-  // Crear HTML para cada producto
   productList.innerHTML = productos.map(prod => `
-    <div class="producto">
+    <article class="product-card">
+      <div class="product-image-container">
+        <img src="${prod.imagen_url}" alt="Imagen de ${prod.nombre}" />
+      </div>
       <h3>${prod.nombre}</h3>
-      <p>Precio: $${prod.precio.toFixed(2)}</p>
-      <p>Stock disponible: ${prod.stock}</p>
-      <button class="agregar-btn" data-id="${prod.id}">Agregar al carrito</button>
-    </div>
+      <p><strong>Precio:</strong> $${prod.precio.toFixed(2)}</p>
+      <p><strong>Stock disponible:</strong> ${prod.stock}</p>
+      <button class="agregar-carrito" data-id="${prod.id}">Agregar al carrito</button>
+    </article>
   `).join("");
 }
 
 // Agregar producto al carrito con validación de stock
 async function agregarAlCarritoConStock(productoId) {
-  // Obtener producto con stock actualizado desde Supabase
   const { data: producto, error } = await supabase
     .from("producto")
-    .select("id, nombre, precio, stock")
+    .select("id, nombre, precio, stock, imagen_url")
     .eq("id", productoId)
     .single();
 
@@ -79,7 +80,8 @@ async function agregarAlCarritoConStock(productoId) {
       id: producto.id,
       nombre: producto.nombre,
       precio: producto.precio,
-      cantidad: 1
+      cantidad: 1,
+      imagen_url: producto.imagen_url
     });
   }
 
@@ -89,8 +91,8 @@ async function agregarAlCarritoConStock(productoId) {
 
 // Escuchar clicks para agregar productos al carrito
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("agregar-btn")) {
-    const id = e.target.dataset.id; // <-- Aquí ya sin parseInt
+  if (e.target.classList.contains("agregar-carrito")) {
+    const id = e.target.dataset.id;
     agregarAlCarritoConStock(id);
   }
 });
@@ -98,6 +100,3 @@ document.addEventListener("click", (e) => {
 // Inicialización
 cargarProductos();
 actualizarContadorCarrito();
-
-
-

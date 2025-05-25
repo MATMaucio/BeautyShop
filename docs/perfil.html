@@ -6,10 +6,24 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header>
-    <span id="user-info"></span>
-    <button id="logout-btn">Cerrar sesión</button>
-  </header>
+ <header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background-color: #c71585; color: #fff;">
+  <h1 style="margin: 0; cursor: pointer;" id="logo">Beauty Shop</h1>
+
+  <nav>
+    <ul style="display: flex; gap: 15px; list-style: none; margin: 0; padding: 0;">
+      <li><a href="index.html" style="color: #fff; text-decoration: none;">Inicio</a></li>
+      <li><a href="productos.html" style="color: #fff; text-decoration: none;">Productos</a></li>
+      <a href="carrito.html" class="btn-carrito">🛒 Carrito (<span id="carrito-count">0</span>)</a>
+      <li><a href="perfil.html" style="color: #fff; text-decoration: none;">Perfil</a></li>
+      <li><a href="historial.html" style="color: #fff; text-decoration: none;">Historial</a></li>
+    </ul>
+  </nav>
+
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <div id="user-info" style="font-weight: 600;">No has iniciado sesión</div>
+    <button id="logout-btn" style="display: none; padding: 5px 10px; cursor: pointer;">Cerrar sesión</button>
+  </div>
+</header>
 
   <main>
     <h1>Mi perfil</h1>

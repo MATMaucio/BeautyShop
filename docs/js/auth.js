@@ -10,6 +10,37 @@ const isCarritoPage = path.includes('carrito.html');
 const isHistorialPage = path.includes('historial.html'); // 🆕
 const isPerfilPage = path.includes('perfil.html'); // 🆕
 
+async function asegurarClienteRegistrado(user) {
+  if (!user) return;
+
+  const { data: existingUser, error: checkError } = await supabase
+    .from("cliente")
+    .select("id")
+    .eq("id", user.id)
+    .single();
+
+  if (!existingUser && !checkError) {
+    const nombre = user.user_metadata?.nombre || user.user_metadata?.full_name || user.email;
+    const correo = user.email;
+
+    const { error: insertError } = await supabase
+      .from("cliente")
+      .insert({ id: user.id, nombre, correo });
+
+    if (insertError) {
+      console.error("❌ Error al insertar cliente:", insertError.message);
+    } else {
+      console.log("✅ Cliente insertado en Supabase por primera vez.");
+
+      if (user.app_metadata?.provider === "google") {
+        alert(`¡Bienvenido, ${nombre}! Tu cuenta ha sido creada correctamente con Google.`);
+      }
+    }
+  } else {
+    console.log("🟡 Cliente ya existe en Supabase.");
+  }
+}
+
 // 🟢 LOGIN
 if (isLoginPage) {
   const form = document.getElementById("login-form");
@@ -35,12 +66,18 @@ if (isLoginPage) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${location.origin}/index.html`
+        redirectTo: `${location.origin}/docs/index.html`
       }
     });
 
     if (error) alert(error.message);
   });
+
+  // Detectar sesión al regresar del OAuth
+  (async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    await asegurarClienteRegistrado(user);
+  })();
 }
 
 // 🔵 REGISTRO
@@ -85,176 +122,59 @@ if (isRegisterPage) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${location.origin}/index.html`
+        redirectTo: `${location.origin}/docs/index.html`
       }
     });
 
     if (error) alert(error.message);
   });
-}
 
-// 🟡 PRODUCTOS (página privada)
-if (isProductosPage) {
+  // Detectar sesión al regresar del OAuth
   (async () => {
-    const logoutBtn = document.getElementById("logout-btn");
-    const userInfo = document.getElementById("user-info");
-
-    const { data: { user }, error } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        window.location.href = "login.html";
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
+    const { data: { user } } = await supabase.auth.getUser();
+    await asegurarClienteRegistrado(user);
   })();
 }
 
-// 🟢 INDEX (público con sesión opcional)
-if (isIndexPage) {
-  (async () => {
-    const logoutBtn = document.getElementById("logout-btn");
-    const userInfo = document.getElementById("user-info");
+// Función común para cargar usuario y proteger páginas privadas
+async function cargarUsuarioYProteger(paginaPrivada = false) {
+  const logoutBtn = document.getElementById("logout-btn");
+  const userInfo = document.getElementById("user-info");
 
-    const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-    if (user) {
-      userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+  if (paginaPrivada && (error || !user)) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  if (user) {
+    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
+    if (logoutBtn) {
       logoutBtn.style.display = "inline-block";
-
       logoutBtn.addEventListener("click", async () => {
         await supabase.auth.signOut();
-        window.location.href = "index.html";
+        window.location.href = "login.html";
       });
-    } else {
-      userInfo.textContent = "No has iniciado sesión";
-      logoutBtn.style.display = "none";
     }
-  })();
+  } else {
+    if (userInfo) userInfo.textContent = "No has iniciado sesión";
+    if (logoutBtn) logoutBtn.style.display = "none";
+  }
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (!session && paginaPrivada) {
+      window.location.href = "login.html";
+    }
+  });
 }
 
-// 🟣 CHECKOUT (página privada protegida)
-if (isCheckoutPage) {
-  (async () => {
-    const logoutBtn = document.getElementById("logout-btn");
-    const userInfo = document.getElementById("user-info");
+// Páginas privadas protegidas:
+if (isProductosPage) cargarUsuarioYProteger(true);
+if (isCheckoutPage) cargarUsuarioYProteger(true);
+if (isCarritoPage) cargarUsuarioYProteger(true);
+if (isHistorialPage) cargarUsuarioYProteger(true);
+if (isPerfilPage) cargarUsuarioYProteger(true);
 
-    const { data: { user }, error } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        window.location.href = "login.html";
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
-  })();
-}
-
-// 🟠 CARRITO (página privada protegida)
-if (isCarritoPage) {
-  (async () => {
-    const logoutBtn = document.getElementById("logout-btn");
-    const userInfo = document.getElementById("user-info");
-
-    const { data: { user }, error } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        window.location.href = "login.html";
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
-  })();
-}
-
-// 🔴 HISTORIAL (página privada protegida)
-if (isHistorialPage) {
-  (async () => {
-    const logoutBtn = document.getElementById("logout-btn");
-    const userInfo = document.getElementById("user-info");
-
-    const { data: { user }, error } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        window.location.href = "login.html";
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
-  })();
-}
-
-// 🟤 PERFIL (página privada protegida)
-if (isPerfilPage) {
-  (async () => {
-    const logoutBtn = document.getElementById("logout-btn");
-    const userInfo = document.getElementById("user-info");
-
-    const { data: { user }, error } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    userInfo.textContent = `Hola, ${user.user_metadata?.nombre || user.email}`;
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        window.location.href = "login.html";
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
-  })();
-}
-
-
-
+// Página pública con sesión opcional:
+if (isIndexPage) cargarUsuarioYProteger(false);
