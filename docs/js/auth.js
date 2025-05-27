@@ -9,7 +9,9 @@ const isCheckoutPage = path.includes('checkout.html');
 const isCarritoPage = path.includes('carrito.html');
 const isHistorialPage = path.includes('historial.html'); // 🆕
 const isPerfilPage = path.includes('perfil.html'); // 🆕
+const isRecuperarPage = path.includes('recuperar.html'); // 🆕
 
+// Función para asegurar que cliente exista en tabla "cliente"
 async function asegurarClienteRegistrado(user) {
   if (!user) return;
 
@@ -134,6 +136,30 @@ if (isRegisterPage) {
     const { data: { user } } = await supabase.auth.getUser();
     await asegurarClienteRegistrado(user);
   })();
+}
+
+// 🟣 RECUPERAR CONTRASEÑA
+if (isRecuperarPage) {
+  const form = document.getElementById("recuperar-form");
+  const emailInput = document.getElementById("recuperar-email");
+  const mensaje = document.getElementById("mensaje-recuperacion");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${location.origin}/docs/reset.html`
+    });
+
+    if (error) {
+      mensaje.textContent = "❌ " + error.message;
+      mensaje.style.color = "red";
+    } else {
+      mensaje.textContent = "✅ Revisa tu correo para restablecer tu contraseña.";
+      mensaje.style.color = "green";
+    }
+  });
 }
 
 // Función común para cargar usuario y proteger páginas privadas

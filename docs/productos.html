@@ -7,8 +7,13 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
- <header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background-color: #c71585; color: #fff;">
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background-color: #c71585; color: #fff; flex-wrap: wrap;">
   <h1 style="margin: 0; cursor: pointer;" id="logo">Beauty Shop</h1>
+
+  <!-- Barra de búsqueda -->
+  <form id="search-form" style="flex: 1; max-width: 300px; margin: 10px 20px;">
+    <input type="text" id="search-input" placeholder="Buscar productos..." style="width: 100%; padding: 6px 10px; border-radius: 20px; border: none;" />
+  </form>
 
   <nav>
     <ul style="display: flex; gap: 15px; list-style: none; margin: 0; padding: 0;">
@@ -26,6 +31,7 @@
   </div>
 </header>
 
+
 <main>
   <section id="product-list">
     <!-- Los productos se cargarán dinámicamente aquí -->
@@ -38,5 +44,6 @@
 
 <script type="module" src="js/auth.js"></script>
 <script type="module" src="js/productos.js"></script>
+<script type="module" src="js/pedidos.js"></script>
 </body>
 </html>
